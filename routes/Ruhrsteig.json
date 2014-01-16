@@ -1,0 +1,14 @@
+{ 
+Ruhrsteig : [
+	{ "GCcode" : "GC45ZGY" , "GCname" : "Isenburg Runde"},
+	{ "GCcode" : "GC4501D" , "GCname" : "Holthausen Runde"},
+	{ "GCcode" : "GC4T5NF" , "GCname" : "Blankenstein Runde"},
+	{ "GCcode" : "GC44NHJ" , "GCname" : "Durchholz Runde"},
+	{ "GCcode" : "GC4496W" , "GCname" : "Muttental Runde"},
+	{ "GCcode" : "GC44V93" , "GCname" : "Etappe Witten Hattingen"},
+	{ "GCcode" : "GC43Y93" , "GCname" : "Etappe Witten Wetter"},
+	{ "GCcode" : "GC43Y8V" , "GCname" : "Etappe Wetter Herdecke"},
+	{ "GCcode" : "GC45ZGH" , "GCname" : "Hengsteysee Runde"},
+	{ "GCcode" : "GC4RNX5" , "GCname" : "Elsebachtal Runde"}
+	]
+}

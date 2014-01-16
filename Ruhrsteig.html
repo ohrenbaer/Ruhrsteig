@@ -1,0 +1,239 @@
+<!DOCTYPE html  manifest="Ruhrsteig.manifest">
+<!---
+	Funktionalität für die mobile Ruhrsteig/Sauersteig Wandermulti Seite 
+
+	See ReadMe.md for Description / Backlog and Revisions
+	
+-->
+<html>
+<head>
+	<title>Ohrenbaer Mobil </title>
+
+    <meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0 user-scalable=no minimum-scale=1.0 maximum-scale=1.0">
+	<link href="images/Ruhrsteig-60.png" rel="apple-touch-icon" />
+	<link href="images/Ruhrsteig-60.png" rel="apple-touch-icon-precomposed" />
+	<link href="images/Ruhrsteig-76.png" rel="apple-touch-icon" sizes="76x76" />
+	<link href="images/Ruhrsteig-120.png" rel="apple-touch-icon" sizes="120x120" />
+	<link href="images/Ruhrsteig-152.png" rel="apple-touch-icon" sizes="152x152" />
+
+	<link rel="stylesheet" href="style/leaflet.css" />
+	<link rel="stylesheet" href="style/ohrenbaer.css" />
+	
+    <script src="js/jquery.js"></script>
+
+	<script src="js/gpxfile.js"></script>
+	<script src="js/leaflet.js"></script>
+	<script src="js/ohrenbaer.js"></script>
+	<script src="js/winrekey.js"></script>
+
+
+
+</head>
+
+
+<body>
+	<div id="map" class="mapView" >
+	</div>
+
+    <!--------------------------------------------------------------------------------------- MenuButtons-------------------------------------------->
+	<div id="coordPanel"  class="hide" >
+	Ohrenbaer Ruhrsteig App
+	</div>
+
+    
+	
+	<div id="MenuBar" class="hide" >
+  	<button data-role="none" id="nextButton" class="MenuButtons"  onclick="klickNext();">
+	+ 
+	</button>
+  	<button data-role="none" id="prevButton" class="MenuButtons"  onclick="klickPrev();">
+	- 
+	</button>
+ 	<button data-role="none" id="MenuButton" class="MenuButtons"  onclick="klickMenu();" >
+	Menue 
+	</button>
+ 	</div>
+
+ 	
+
+ 	<div id="Controls" class="hide" >
+  	
+	<button data-role="none" id="posButton" class="MenuButtons"  onclick="klickPosition();">
+	GPS on 
+	</button>
+	<button data-role="none" id="picButton" class="MenuButtons" onclick="klickBilder();">
+	Bilder  
+	</button>
+	<button data-role="none" id="tableButton" class="MenuButtons" onclick="klickTabelle();">
+	Tabelle 
+	</button>
+	</div>
+    <!---------------------------------------------------------------------------------------- Landing Page ------------------------------------------->
+    <div id="Landing" class="hide">
+			
+			<h2> Ohrenbaer Ruhrsteig App </h2>
+			<h3> Geladene Strecke fortsetzen </h3>
+			<ul id="geladeneStrecken" class="RundenUL">
+			</ul>
+			<h3> Neue Strecke laden und starten? </h3>
+			<ul id="neueStrecken" class="RundenUL">
+			</ul>	
+			<h3> Speicher Management </h3>
+			<ul>
+			<li id="alleLoeschen"> Alle geladene Strecken löschen </li>
+			</ul>
+			<br>
+			<h2> Über diese Seite </h2>
+			<p>
+			 Diese Mobile Webseite enthält alle Daten, die man bei den Cache der Ruhrsteig Serie unterwegs braucht.
+			 <ul>
+				 <li> Einen Kartenauszug (Hike-n-Bike OSM) mit dem Track-Plot der Tour und den Referenzpunkten und Stationskoordinaten  </li>
+				 <li> Die Suchbilder für die Suche an den Stationen und deren Werte.  </li>
+				 <li> Eine Tabelle mit den Wegpunktkoordinaten und Rechenschema. </li>
+				 <ul> 
+					<li> Durch Anklicken der Bilder kann man die Werte in die Tabelle übertragen </li>
+					<li> Durch Anklicken der Tabellenzeile kann man direkt auf Wegpunkte springen oder Bilder wieder freigeben </li>
+				 </ul>
+			 </ul>
+
+			 Viel Spaß beim Wandern und Cachen <br>
+			 und viele Grüße aus Dortmund,<br>
+			 Team Ohrenbaer 
+			 </p>	 
+			 <p> Achtung: Dies ist eine Beta Version, es sind sicher noch viele Fehler in der Seite und die Optik und Geräteanpassung ist noch auf Prototyp Level.
+				 Feedback und Tipps nehmen wir gerne unter Kontakt: Ohrenbaer auf www.geocaching.com
+			 </p>
+			 
+	</div> 
+ 
+ <!-------------------------------------------------------------------------------------------- Karte --------------------------------------->
+	
+    <div id="Map" class="mapView hide" >
+	</div>
+
+<script>
+
+var GCstore ={}; 
+
+$(document).ready(function() {
+	var args = location.search.substr(1);
+	console.log("document ready ; args = "+ args );
+	
+	if (args == "debug") { // Debug Option gesetzt
+		alert("Starting in weinre debug Modus");
+		$.getScript( "http://debug-software.intel.com/target/target-script-min.js#" + DEBUG_KEY )
+		.done(function( script, textStatus ) {
+			console.log( textStatus );
+		})
+	}
+	else if (args != "") { // Argumente in der URL
+		GCcode = args;
+		console.log("preselected route = '"+ GCcode + "'");
+
+		if (GCsupported[GCcode] !== undefined) { // Runde wird supported
+			console.log("Route preselected: " + GCcode + " " + GCsupported[GCcode]);
+			//alert("direct call :" + GCcode);
+			GCstore = JSON.parse(localStorage.getItem('GCstore'));
+			GCstore[GCcode] = GCsupported[GCcode];
+			console.log(GCstore);
+			var dataToStore = JSON.stringify(GCstore);
+			localStorage.setItem('GCstore', dataToStore);
+			ladeDaten(GCcode);
+			return;
+		}
+		else { // Runde nicht hier gelistet
+			console.log("unknown parameter: " + args );
+				var alerttext = "<p> unbekannte Argumente " + args + "</p>"
+				alerttext += "<p> folgende Runden werden zzt supported: " + JSON.stringify(GCsupported) + "</p>";
+				stopOnError(alerttext);
+			return;
+		}
+	}
+	else { // ohne Argumente
+		createLandingPage();
+	}
+});
+
+function stopOnError (atext) {
+			var alerttext = "<h1>Fehlermeldung: </h1>" + atext;
+			console.log(alerttext);
+			$("#Landing").html(alerttext);
+			$("#Landing").removeClass("hide").addClass("show");
+			$("#map").removeClass("show").addClass("hide");
+			$("#bilderPanel").removeClass("show").addClass("hide");
+			$("#tabellePanel").removeClass("show").addClass("hide");
+			$("#Controls").removeClass("show").addClass("hide");
+			$("#MenuBar").removeClass("show").addClass("hide");
+			$("#coordPanel").removeClass("show").addClass("hide");
+			alert("Fehler: " + $(atext).text().substr(0,30));
+}	  
+	  	
+function createLandingPage () {
+	$("#Landing").removeClass("hide").addClass("show");
+	console.log("Landing Page");
+
+	if (localStorage.getItem("GCstore") === null) {    //no localStorage available yet
+		console.log("Keine Strecke geladen");
+		}
+	else {
+		var items = ""
+		GCstore = JSON.parse(localStorage.getItem('GCstore'));
+		$.each(GCstore, function(key, value){
+			console.log('index: ' + key + ',value: ' + value);
+			items += "<li class='rundenAuswahl' id='" + key + "'>" + value + "</li>";  
+			});
+		$("#geladeneStrecken").append(items);
+
+	}
+
+
+	var items = ""
+	console.log(GCsupported);
+	$.each(GCsupported,function(i,value){
+		console.log('index: ' + i + ',value: ' + GCsupported[i]);
+		if (GCstore[i] == undefined) {
+			items += "<li class='rundenAuswahl' id='" + i + "'>" + value + "</li>";  
+			}
+		else {
+			console.log("already in upper UL");
+		}
+		});
+	$("#neueStrecken").append(items);
+	console.log(items);
+	$(".rundenAuswahl").on("click",starteNeueRunde);
+	$("#alleLoeschen").on("click",alleRundenLoeschen);
+
+}
+
+function starteNeueRunde() {
+	GCcode = this.id;
+	console.log("starte Runde " + GCcode);
+	console.log("adding to store: " + GCcode + " " + GCsupported[GCcode]);
+	GCstore[GCcode] = GCsupported[GCcode];
+	console.log(GCstore);
+	var dataToStore = JSON.stringify(GCstore);
+	localStorage.setItem('GCstore', dataToStore);
+	location.assign("Ruhrsteig.html?"+GCcode);
+	//ladeDaten(GCcode);
+}
+
+function starteGeladeneRunde() {
+	GCcode = this.id;
+	console.log("starte Runde " + GCcode);
+	location.assign("Ruhrsteig.html?"+GCcode);
+
+	//ladeDaten(GCcode);
+}
+
+function alleRundenLoeschen () {
+	localStorage.clear();
+	GCcode="";
+	location.reload();
+}
+
+
+</script>
+</body>
+</html>
+

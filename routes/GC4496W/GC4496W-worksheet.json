@@ -1,0 +1,43 @@
+{
+"worksheet" : {
+		"id" : "GC4496W",
+		"paperWorksheet" : "BilderWegpunkte.jpg",
+		"pics" :  [
+			{ "filename" : "pic01.jpg" , "value" : 11 },
+			{ "filename" : "pic02.jpg" , "value" : 28 },
+			{ "filename" : "pic03.jpg" , "value" : 33 },
+			{ "filename" : "pic04.jpg" , "value" : 50 },
+			{ "filename" : "pic05.jpg" , "value" : 55 },
+			{ "filename" : "pic06.jpg" , "value" : 60 },
+			{ "filename" : "pic07.jpg" , "value" : 88 },
+			{ "filename" : "pic08.jpg" , "value" : 99 },
+			{ "filename" : "pic09.jpg" , "value" : 111},
+			{ "filename" : "pic10.jpg" , "value" : 203 },
+			{ "filename" : "pic11.jpg" , "value" : 222 },
+			{ "filename" : "pic12.jpg" , "value" : 438 }
+		],  
+		"formula" : {
+			"latOffsetDegrees" : 51,
+			"latOffsetMinutes"	: 24,
+			"lonOffsetDegrees" : 7,
+			"lonOffsetMinutes" : 17,
+			"lonSumOffset" : 0,
+			"latSumOffset" : 0,
+			"table" : 
+				[
+				{ "index" : 0, "name" : "A" , "multiLat" : 0, "multiLon" : 1 },
+				{ "index" : 1, "name" : "B" , "multiLat" : 1, "multiLon" : 0 },
+				{ "index" : 2, "name" : "C" , "multiLat" : 0, "multiLon" : 1 },
+				{ "index" : 3, "name" : "D" , "multiLat" : 1, "multiLon" : 0 },
+				{ "index" : 4, "name" : "E" , "multiLat" : 0, "multiLon" : 1 },
+				{ "index" : 5, "name" : "F" , "multiLat" : 1, "multiLon" : 0 },
+				{ "index" : 6, "name" : "G" , "multiLat" : 0, "multiLon" : 1 },
+				{ "index" : 7, "name" : "H" , "multiLat" : 1, "multiLon" : 0 },
+				{ "index" : 8, "name" : "I" , "multiLat" : 0, "multiLon" : 1 },
+				{ "index" : 9, "name" : "J" , "multiLat" : 1, "multiLon" : 0 },
+				{ "index" : 10, "name" : "K" , "multiLat" : 0, "multiLon" : 1 },
+				{ "index" : 11, "name" : "L" , "multiLat" : 1, "multiLon" : 0 }
+				]
+			}
+}
+}
