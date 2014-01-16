@@ -37,7 +37,8 @@ ToDo
 					- Freigegebene Bilder werden in der Bilder Übersicht nicht wieder mit Ihren Werten sichtbar
 
 Revisions
-=========						- 
+=========	
+ 
 	Revision 0.9.4	14.1.2014 09:00 
 					- Feature: Navigation supports back button.
 					- Feature: Direct Call via url?GCxxxxx
